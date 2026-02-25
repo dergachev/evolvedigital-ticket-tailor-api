@@ -3,6 +3,14 @@ const qs = require('qs');
 const fs = require('fs');
 const csv = require('csv-parser');
 
+require("dotenv").config();
+
+const API_KEY = process.env.TICKET_TAILOR_API_KEY;
+if (!API_KEY) {
+  console.error("Missing API key. Add it to .env file.");
+  process.exit(1);
+}
+
 const results = [];
 
 fs.createReadStream('discount-codes.csv')
@@ -27,7 +35,7 @@ fs.createReadStream('discount-codes.csv')
           'Accept': 'application/json'
         },
         auth: {
-          username: 'sk_12217_266705_d162ca0eba8347ece0ccfdf648efc849',
+          username: API_KEY,
           password: ''
         },
         data
@@ -41,3 +49,8 @@ fs.createReadStream('discount-codes.csv')
       }
     }
   });
+
+
+
+
+    // const encodedKey = Buffer.from(`${API_KEY}:`).toString("base64");k

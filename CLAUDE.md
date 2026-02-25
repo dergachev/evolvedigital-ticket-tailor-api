@@ -8,7 +8,7 @@ Scripts for bulk-creating discount codes in TicketTailor via their REST API. Rea
 
 ## Setup
 
-Copy `.env.example` or create `.env` with:
+Create `.env` with:
 ```
 TICKET_TAILOR_API_KEY=sk_...
 ```
@@ -20,22 +20,21 @@ npm install
 
 ## Running
 
-The main script is `bulk2.js` (the more polished version; `bulk-create-discounts.js` is an earlier draft):
+The main script is `create-discounts-from-csv.js`:
 ```
-node bulk2.js
+node create-discounts-from-csv.js
 ```
 
 To test the API directly with a single discount via curl, see `test.sh`.
 
 ## CSV Format
 
-`discounts.csv` columns: `code`, `discount_type` (`percentage` or `fixed`), `discount_value`, `max_redemptions`, `valid_from`, `valid_until`, `ticket_type_ids`
+`discount-codes.csv` columns: `code`, `percent`
 
-- `discount_value` for `fixed` type is in dollars — the scripts convert to cents (×100) before sending to the API
-- `ticket_type_ids` is a comma-separated list of TicketTailor ticket type IDs (e.g. `tt_5923623`)
+- Sends as `type: percentage` with `price_percent` set to the percent value
+- Hardcoded to ticket type `tt_5923623` (edit the script to change)
 
 ## API Notes
 
 - Auth: Basic auth with API key as username and empty password
-- The API accepts `application/json` body (not form-encoded as shown in TicketTailor docs)
-- `bulk2.js` wraps the payload in `{ data: payload }` — this was the key fix over `bulk-create-discounts.js`
+- Body is form-encoded (`application/x-www-form-urlencoded`)
