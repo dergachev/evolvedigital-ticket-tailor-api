@@ -11,6 +11,7 @@ if (!API_KEY) {
   process.exit(1);
 }
 
+
 const results = [];
 
 fs.createReadStream('discount-codes.csv')
@@ -18,13 +19,20 @@ fs.createReadStream('discount-codes.csv')
   .on('data', (row) => results.push(row))
   .on('end', async () => {
     for (const row of results) {
+      const ticketTypes = row.ticket_types.split(',').map(s => s.trim());
       const data = qs.stringify({
         'code': row.code,
         'name': `${row.code} ${row.percent}% OFF`,
         'price_percent': row.percent,
-        'ticket_types[]': 'tt_5923623',
+        'ticket_types': ticketTypes,
         'type': 'percentage'
-      });
+      }, { arrayFormat: 'brackets' });
+
+      const cyan = s => `\x1b[36m${s}\x1b[0m`;
+      const yellow = s => `\x1b[33m${s}\x1b[0m`;
+      console.log(cyan(`\n[${row.code}] POST https://api.tickettailor.com/v1/discounts`));
+      console.log(yellow('payload object:'), { code: row.code, percent: row.percent, ticketTypes });
+      console.log(yellow('serialized body:'), data);
 
       const config = {
         method: 'post',

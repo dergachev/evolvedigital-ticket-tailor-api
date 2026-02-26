@@ -1,2 +1,3 @@
-code,percent
-MAYA98,98
+code,percent,ticket_types
+MAYA98,98,tt_5923623
+MAYA97,97,"tt_5923623,tt_5923632"
